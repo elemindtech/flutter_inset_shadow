@@ -60,7 +60,7 @@ class BoxDecoration extends painting.BoxDecoration {
       image: image, // TODO(ianh): fade the image from transparent
       border: BoxBorder.lerp(null, border, factor),
       borderRadius: BorderRadiusGeometry.lerp(null, borderRadius, factor),
-      boxShadow: BoxShadow.lerpList(null, boxShadow as List<BoxShadow>, factor),
+      boxShadow: BoxShadow.lerpList(null, boxShadow as List<BoxShadow>?, factor),
       gradient: gradient?.scale(factor),
       shape: shape,
     );
@@ -129,8 +129,8 @@ class BoxDecoration extends painting.BoxDecoration {
         t,
       ),
       boxShadow: BoxShadow.lerpList(
-        a.boxShadow as List<BoxShadow>,
-        b.boxShadow as List<BoxShadow>,
+        a.boxShadow as List<BoxShadow>?,
+        b.boxShadow as List<BoxShadow>?,
         t,
       ),
       gradient: Gradient.lerp(a.gradient, b.gradient, t),
@@ -298,6 +298,7 @@ class _InsetBoxDecorationPainter extends BoxPainter {
       if (innerRect.isEmpty) {
         final paint = Paint()..color = color;
         canvas.drawRRect(clipRRect, paint);
+        continue;
       }
 
       var innerRRect = borderRadius.toRRect(innerRect);
@@ -322,6 +323,8 @@ class _InsetBoxDecorationPainter extends BoxPainter {
   @override
   void dispose() {
     _imagePainter?.dispose();
+    _cachedBackgroundPaint = null;
+    _rectForCachedBackgroundPaint = null;
     super.dispose();
   }
 
